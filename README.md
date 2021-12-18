@@ -37,6 +37,7 @@ A tag can have up to 6 files associated with it before it requires an index file
    - `0`: Name of file (example: `["My Song Title", "My First Song"]`)
    - `1`: Name of project(s) (example: `["My Album Name", "Music Composition"]`)
    - `2`: MIME Type of the file (example: `["audio/ogg", "audio/opus"]`)
+   - `3`: OS Tag (example: `["discarded"]`)
  - 1: Tag Name Length: `u8`
  - 2: Files Length of Last Index Page (used for file index size when number of index pages is 0): `u16`
  - 4: Files Number of Index Pages: `u32`
