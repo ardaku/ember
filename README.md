@@ -23,7 +23,7 @@ Page 0 is a special page that contains filesystem information.
  - 24: Length (in pages: max = capacity): `u64`
  - 32: Size of file metadata list: `u64`
  - 40: Size of tag metadata list: `u64`
- - 48: Cached index of first non-metadata page `u56`
+ - 48: Cached file ID that uses first non-metadata page `u56`
  - 55: Length of Drive Name: `u8`
  - 56: Drive Name: `[u8; 200]`
  - 256...: The rest of this page should be file metadata page (255 should fit).
