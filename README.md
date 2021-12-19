@@ -22,13 +22,13 @@ When file metadata needs to grow, 1st tag metadata page is relocated to last.
 Metadata CRC is a fixed size located after the metadata capacity, before file pages begin.
 
  - 0: Magic Number For Ember Filesystem v1: `u64=b"eMbRfSv\xFF"`
- - 8: Metadata capacity: `u64`
+ - 8: Metadata capacity: `u56`
+ - 15: Length of drive name: `u8`
  - 16: Capacity (in pages: max ~ 1 yobibyte): `u64`
  - 24: Length (in pages: max = capacity): `u64`
  - 32: Size of file metadata list: `u64`
  - 40: Size of tag metadata list: `u64`
- - 48: Number of garbage pages `u56`
- - 55: Length of Drive Name: `u8`
+ - 48: Link to page top of garbage stack `u64`
  - 56: Drive Name: `[u8; 200]`
  - 256...: The rest of this page should be file metadata page (255 should fit).
 
@@ -74,12 +74,10 @@ File metadata is 256 bytes.  Also 256, and listed in their own file (like tag me
 
 -----
 
-## Garbage Page(s)
-The final page(s) are called the garbage page(s).  It's not required (enabled on page 0).
-If a file is overwritten and it's index is higher than any index in the garbage list, then it's moved, and garbage list index replaced.  If the index equals the size of the file system, then the size is decreased.
-
- - 0: Page Indices For File: `[u64; 8191]`
- - 65528: Length of Garbage page: `u32`
- - 65532: CRC-32 For Garbage Page: `u32`
-
------
+## Garbage Stack
+The garbage stack is implemented as a linked-list.  It's composed of deleted pages.
+If there are no deleted or empty pages, then page 0 must point to page -1 (2s comp).
+Deleted pages contain a page ID at offset 0, zeroed out memory, then a CRC-32 at the end of the page.
+The page ID offset points to the next page in the garbage stack.
+Page ID offset 0 is special (since it can never be deleted), and denotes the last deleted page on the stack.
+All pages after the last deleted page are considered uninitialized, and unusable until the stack has been exhausted, at which point a new root deleted page to the linked list is added.
