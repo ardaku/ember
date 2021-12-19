@@ -51,7 +51,7 @@ A tag can have up to 6 files associated with it before it requires an index file
 -----
 
 ## File Metadata
-File metadata is 256 bytes.  Also 256, and listed in their own file (like tag metadata).
+File metadata is also 256 bytes (like tag metadata).  It cannot share pages with tag metadata.
 
  - 0: Creation Date: `u64`
  - 8: Modification Date: `u64`
